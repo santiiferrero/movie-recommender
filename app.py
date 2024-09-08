@@ -16,16 +16,7 @@ st.set_page_config(layout="wide")
 #    st.session_state.logged_in = False
 
 # Crear el botón de login en la parte superior
-st.markdown("<h1 style='text-align: center;'>🎬 XPERIENCE PLAY 🍿</h1>", unsafe_allow_html=True)
-
-if st.button("Login"):
-    # Solicitar al usuario que ingrese un número
-    user_number = st.number_input("Please enter your number to login:", min_value=0, step=1)
-    
-    if user_number > 0:
-        st.success(f"Logged in successfully! Your number is {user_number}")
-        #st.session_state.logged_in = True
-        
+st.markdown("<h1 style='text-align: center;'>🎬 XPERIENCE PLAY 🍿</h1>", unsafe_allow_html=True)        
 
 # URL directa de la imagen en GitHub
 img_url = 'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/8d7970_9a0ca002a61144d19b6ed5ea34107bab%7Emv2.webp'
