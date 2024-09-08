@@ -51,11 +51,21 @@ df_final = pd.read_csv(url_final)
 url_vectorizer = 'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_vectorizer.csv'
 df_vectorizer = pd.read_csv(url_vectorizer)
 
-url_cosine = 'https://drive.google.com/file/d/1tdplDRklLoWigx4V5bDfbU-ZO0r8nZ72/view?usp=drive_link'
-output_cosine = 'array.npy'
-gdown.download(url_cosine, output_cosine, fuzzy=True, quiet=False)
-data = np.load(output_cosine)
-cosine = data['arr']
+url_cosine = ['https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_0.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_1000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_2000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_3000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_4000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_5000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_6000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_7000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_8000.parquet',
+              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_9000.parquet']
+# Descargar y leer los archivos Parquet desde las URLs y almacenarlos en una lista de DataFrames
+dataframes = [pd.read_parquet(url) for url in url_cosine]
+# Concatenar todos los DataFrames en uno solo
+cosine = pd.concat(dataframes, ignore_index=True)
+cosine = cosine.values
 
 
             ##########  MÉTODO BAYESIANO  ##########
