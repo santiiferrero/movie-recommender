@@ -6,7 +6,7 @@ def similitud_coseno(test, df_vectorizer, cosine_sim):
   ## Consiguiendo las similitudes para el título seleccionado, con respecto al index
   sim_scores = list(enumerate(cosine_sim[index_title]))
   sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-  sim_scores = sim_scores[1:11]
+  sim_scores = sim_scores[1:21]
   sim_scores_id = [i[0] for i in sim_scores]
 
   ## Armando el de similaridad de coseno
