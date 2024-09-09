@@ -7,6 +7,8 @@ import pandas as pd
 import gdown
 import numpy as np
 import requests
+from io import BytesIO
+
 
 # Configurar la página para modo ancho
 st.set_page_config(layout="wide")
