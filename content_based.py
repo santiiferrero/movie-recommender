@@ -13,7 +13,6 @@ def similitud_coseno(test, df_vectorizer, cosine_sim):
   df_similarity_cosine = df_vectorizer[['movieId', 'title', 'genres', 'tmdbId']]
   df_similarity_cosine = df_similarity_cosine.iloc[sim_scores_id]
   df_similarity_cosine['similitud_coseno'] = [i[1] for i in sim_scores]
-  df_similarity_cosine = df_similarity_cosine.drop(df_similarity_cosine[df_similarity_cosine['title'] == test].index)
 
   df_similarity_cosine.reset_index(drop=True, inplace=True)
 
