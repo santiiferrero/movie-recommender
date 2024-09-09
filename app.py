@@ -169,11 +169,9 @@ else:
 st.markdown("---")
 
 
-if rating > 3:
-                           
               ##########  SIMILITUD DE COSENO  ##########
     ##########  DETERMINAMOS LAS PELÍCULAS RECOMENDADAS  ##########
-    
+if rating > 3:
     ## Mostrando la similitud de coseno de la película especifica
     df_similitud_coseno = similitud_coseno(option, df_vectorizer, cosine)
     st.subheader('**WHY YOU LIKED:** ' + option)
@@ -181,26 +179,38 @@ if rating > 3:
     ## Consiguiendo los títulos y posters de las películas recomendadas
     poster_recomendadas = []
     tmdbId_coseno = []
+    # Diccionario para mantener la relación entre poster URL y TMDB ID
+    poster_dict = {}
     for i, valor in enumerate(df_similitud_coseno['tmdbId'].tolist()):
-        api_key = '53881244403c42cb58048b62e1d8fa71'
-        url = f'https://api.themoviedb.org/3/movie/{valor}?api_key={api_key}'
-        response = requests.get(url)
-        if response.status_code == 200:
-            movie_data_2 = response.json()
-        else:
-            print("Error en la solicitud:", response.status_code)
-        poster_url_2 = 'https://image.tmdb.org/t/p/w500' + movie_data_2['poster_path']
-        poster_recomendadas.append(poster_url_2)
-        tmdbId_coseno.append(valor)
+        if valor != tmdb_id_option:
+            if len(poster_dict) >=10:
+                break
+            api_key = '53881244403c42cb58048b62e1d8fa71'
+            url = f'https://api.themoviedb.org/3/movie/{valor}?api_key={api_key}'
+            response = requests.get(url)
+            if response.status_code == 200:
+                movie_data_2 = response.json()
+            else:
+                print("Error en la solicitud:", response.status_code)
+    
+            if 'poster_path' in movie_data_2 and movie_data_2["poster_path"]:
+                poster_url_type = 'https://image.tmdb.org/t/p/w500' + movie_data_2["poster_path"]
+    
+                # Agregar el poster y el TMDB ID al diccionario si el poster URL no está ya en el diccionario
+                if poster_url_type not in poster_dict:
+                        poster_dict[poster_url_type] = valor
+            # poster_url_2 = 'https://image.tmdb.org/t/p/w500' + movie_data_2['poster_path']
+            # poster_recomendadas.append(poster_url_2)
+            # tmdbId_coseno.append(valor)
     
     # Centrar contenido y ajustar el tamaño
     img_width = 140  # Tamaño uniforme para las imágenes
     
     # Creamos una fila con varias columnas
-    cols_cosine = st.columns(len(poster_recomendadas))
+    cols_cosine = st.columns(len(poster_dict))
     
     # Iteramos sobre cada película y su respectiva columna
-    for i, (tmdb_id, url) in enumerate(zip(tmdbId_coseno, poster_recomendadas)):
+    for i, (url, tmdb_id) in enumerate(poster_dict.items()):
     
         # URL del endpoint de videos
         video_url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/videos?api_key={api_key}&language=en-US"
@@ -219,9 +229,6 @@ if rating > 3:
             st.link_button("Trailer", trailer_url, use_container_width=True)
             st.image(url, width=img_width)
             st.link_button("See more", f"https://www.themoviedb.org/movie/{tmdb_id}", use_container_width=True)
-    
-            # if st.button('Ver más', key=f'ver_mas_{i+10}', use_container_width=True):
-            #     st.write(f'Detalles de {url}')
 
 
 #if st.session_state.logged_in:
