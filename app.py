@@ -133,32 +133,39 @@ rating = 0
 if option:
     df_title_tmdbId = df_final.groupby('title')['tmdbId'].first().reset_index()
     api_key = '53881244403c42cb58048b62e1d8fa71'
-    tmdb_id = df_title_tmdbId[df_title_tmdbId['title'] == f"{option}"]['tmdbId'].tolist()[0]
-    url = f'https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={api_key}'
+    tmdb_id_option = df_title_tmdbId[df_title_tmdbId['title'] == f"{option}"]['tmdbId'].tolist()[0]
+    url = f'https://api.themoviedb.org/3/movie/{tmdb_id_option}?api_key={api_key}'
 
     response = requests.get(url)
     if response.status_code == 200:
         movie_data = response.json()
 
-        col1, col2 = st.columns([1, 3], vertical_alignment="center")
+        # Verificamos si hay datos disponibles y si el póster está presente
+        if movie_data:
+            poster_path = movie_data.get('poster_path')
+            if poster_path:
+                # Creamos 2 columnas: una para la imagen, otra para la descripción
+                col1, col2 = st.columns([1, 2], vertical_alignment="center")
 
-        with col1:
-            poster_url = 'https://image.tmdb.org/t/p/w500' + movie_data['poster_path']
-            st.image(poster_url, width=200)
+                # Colocamos el póster en la primera columna
+                with col1:
+                    poster_url = 'https://image.tmdb.org/t/p/w500' + poster_path
+                    st.image(poster_url, width=300)
 
-        with col2:
-            st.link_button(f"**TITLE:** {df_final[df_final['tmdbId'] == tmdb_id]['title'].tolist()[0]}", 
-                           f"https://www.themoviedb.org/movie/{tmdb_id}", use_container_width=True)
-            st.write(f"**GENRES:** {df_final[df_final['tmdbId'] == tmdb_id]['genres'].tolist()[0]}")
-            st.write(f"**OVERVIEW:** {movie_data['overview']}")
-            st.write(f"**RELEASE DATE:** {movie_data['release_date']}")
-            st.write(f"**DURATION:** {movie_data['runtime']} min")
-            st.write(f"**RANKING:** ⭐({movie_data['popularity']})")
+                # Colocamos la información en la segunda columna
+                with col2:
+                    st.link_button(f"**TITLE:** {movie_data.get('title', 'Título no disponible')}", 
+                                f"https://www.themoviedb.org/movie/{tmdb_id_option}", use_container_width=True)
+                    st.write(f"**GENRES:** {', '.join(genre['name'] for genre in movie_data.get('genres', []))}")
+                    st.write(f"**OVERVIEW:** {movie_data.get('overview', 'Descripción no disponible')}")
+                    st.write(f"**RELEASE DATE:** {movie_data.get('release_date', 'Fecha de lanzamiento no disponible')}")
+                    st.write(f"**DURATION:** {movie_data.get('runtime', 'Duración no disponible')} min")
+                    st.write(f"**POPULARITY:** ⭐({movie_data.get('popularity', 'Popularidad no disponible')})")
 
-        # Añadir la opción de puntuación con estrellas
-        st.write("Rate this movie:")
-        rating = st.radio("", [1, 2, 3, 4, 5], format_func=lambda x: '⭐' * x, horizontal=True)
-        st.write(f"Your rating: {'⭐' * rating}")
+                    # Añadir la opción de puntuación con estrellas
+                    st.write("Rate this movie:")
+                    rating = st.radio("", [1, 2, 3, 4, 5], format_func=lambda x: '⭐' * x, horizontal=True)
+                    st.write(f"Your rating: {'⭐' * rating}")
 
     else:
         st.write("Error en la solicitud:", response.status_code)
