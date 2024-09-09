@@ -64,7 +64,7 @@ response = requests.get(url_cosine)
 # Verifica si la descarga fue exitosa
 if response.status_code == 200:
     # Cargar el archivo .npz
-    data = np.load(BytesIO(response.content)) 
+    data = np.load(BytesIO(response.content), allow_pickle=True) 
 # Accede a los datos en el archivo
 cosine = data['arr']  
 
