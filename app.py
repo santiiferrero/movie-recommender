@@ -42,21 +42,29 @@ df_final = pd.read_csv(url_final)
 url_vectorizer = 'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_vectorizer.csv'
 df_vectorizer = pd.read_csv(url_vectorizer)
 
-url_cosine = ['https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_0.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_1000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_2000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_3000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_4000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_5000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_6000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_7000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_8000.parquet',
-              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_9000.parquet']
+#url_cosine = ['https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_0.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_1000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_2000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_3000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_4000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_5000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_6000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_7000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_8000.parquet',
+#              'https://raw.githubusercontent.com/santiiferrero/movie-recommender/main/df_cosine_chunk_9000.parquet']
 # Descargar y leer los archivos Parquet desde las URLs y almacenarlos en una lista de DataFrames
-dataframes = [pd.read_parquet(url) for url in url_cosine]
+#dataframes = [pd.read_parquet(url) for url in url_cosine]
 # Concatenar todos los DataFrames en uno solo
-cosine = pd.concat(dataframes, ignore_index=True)
-cosine = cosine.values
+#cosine = pd.concat(dataframes, ignore_index=True)
+#cosine = cosine.values
+url_cosine = 'https://www.dropbox.com/scl/fi/cowya5xy57jyk8f9mzx6c/array_16.npz?rlkey=jf608oxzhnq8wkea29j0ogyc8&e=1&st=0y7p45ap&dl=1'
+response = requests.get(url_cosine)
+# Verifica si la descarga fue exitosa
+if response.status_code == 200:
+    # Cargar el archivo .npz
+    data = np.load(BytesIO(response.content)) 
+# Accede a los datos en el archivo
+cosine = data['arr']  
 
 
             ##########  MÉTODO BAYESIANO  ##########
